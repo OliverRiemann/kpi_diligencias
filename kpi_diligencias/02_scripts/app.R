@@ -17,8 +17,26 @@ ui <- dashboardPage(
     ),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
-      menuItem("Widgets", tabName = "widgets", icon = icon("th"))
+      menuItem(
+        "Resultados Electorales", 
+        tabName = "dashboard", 
+        icon = icon("dashboard")
+        ),
+      menuItem(
+        " Estructura del patrido", 
+        tabName = "widgets",
+        icon = icon("th")
+        ),
+      menuItem(
+        "Control de trabajo",
+        tabName = "control",
+        icon = icon("briefcase")
+      ),
+      menuItem(
+        "Métricas de Interés",
+        tabName = "metricas",
+        icon = icon("chart-simple")
+      )
     )
   ),
   dashboardBody(
@@ -34,9 +52,17 @@ ui <- dashboardPage(
             title = "Controls",
             sliderInput("slider", "Number of observations:", 1, 100, 50)
           )
+        ),
+        fluidRow(
+          box(
+            plotOutput("plot1", height = 250)
+          ),
+          box(
+            title = "Controls",
+            sliderInput("slider", "Number of observations:", 1, 100, 50)
+          )
         )
       ),
-
       # Second tab content
       tabItem(
         tabName = "widgets",
