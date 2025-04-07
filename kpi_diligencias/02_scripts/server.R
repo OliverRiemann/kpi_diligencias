@@ -1,3 +1,5 @@
+
+
 server <- function(input, output) {
   
   # Record the time that the session started.
@@ -6,12 +8,11 @@ server <- function(input, output) {
     # The downloadRate is the number of rows in pkgData since
     # either startTime or maxAgeSecs ago, whichever is later.
     elapsed <- startTime
-    
     valueBox(
-      value = formatC(elapsed, digits = 1, format = "f"),
+      value = formatC(elapsed/10e5, digits = 1, format = "f"),
       subtitle = "Downloads per sec (last 5 min)",
       icon = icon("area-chart"),
-      color = "yellow"
+      color = "yellow",
     )
   })
   

@@ -1,7 +1,16 @@
 pacman::p_load(
   tidyverse,
   shiny,
-  shinydashboard
+  shinydashboard,
+  googlesheets4
+)
+
+# Conexión a google sheets
+options(gargle_oauth_cache = ".secrets")
+gargle::gargle_oauth_cache()
+
+gs4_auth(
+  cache = ".secrets", email = "oliver@euzen.mx"
 )
 
 # UI --------------------------------------------------------------------------------------------------------------
@@ -39,11 +48,11 @@ ui <- dashboardPage(
       conditionalPanel(
         'input.sidebarid == "dashboard"',
         selectizeInput(
-          "tipo_eleccion", "Tipo de elección: ", 
+          "tipo_eleccion", "Tipo de elección: ",
           choices = c("Presidente", "Senadores", "Diputados Federales", "Gubernatura", "Ayuntamiento", "Diputados Locales")
         ),
         selectizeInput(
-          "tipo_voto", "Tipo de voto: ", 
+          "tipo_voto", "Tipo de voto: ",
           choices = c("Por candidato", "Por partido", "Por marca")
         ),
         selectizeInput(
@@ -54,11 +63,11 @@ ui <- dashboardPage(
       conditionalPanel(
         'input.sidebarid == "partido"',
         selectizeInput(
-          "estado", "Estado: ", 
+          "estado", "Estado: ",
           choices = c("Nuevo León", "Jalisco", "Ciudad de México")
         ),
         selectizeInput(
-          "puesto", "Puesto: ", 
+          "puesto", "Puesto: ",
           choices = c("Gobernador", "Alcalde", "Diputado Local")
         ),
         selectizeInput(
@@ -69,7 +78,7 @@ ui <- dashboardPage(
       conditionalPanel(
         'input.sidebarid == "control"',
         selectizeInput(
-          "estado", "Estado: ", 
+          "estado", "Estado: ",
           choices = c("Nuevo León", "Jalisco", "Ciudad de México", "Municipio")
         ),
         # Solo aparece si dentro del sidebar control seleccionamos "Municipio"
@@ -88,27 +97,35 @@ ui <- dashboardPage(
       conditionalPanel(
         'input.sidebarid == "metricas"',
         selectizeInput(
-          "estado", "Estado: ", 
+          "estado", "Estado: ",
           choices = c("Nuevo León", "Jalisco", "Ciudad de México")
         ),
         selectizeInput(
-          "metrica", "Métrica: ", 
+          "metrica", "Métrica: ",
           choices = c("Personas sin acceso a los servicios de salud", "Métrica 2")
         )
       )
     )
-    
   ),
   dashboardBody(
+    tags$head(
+      tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
+    ),
     tabItems(
       # First tab content
       tabItem(
+        titlePanel("Título 1"),
         tabName = "dashboard",
         fluidRow(
-          valueBoxOutput("rate"),
-          valueBoxOutput("count"),
-          valueBoxOutput("users")
+          box(width = 6, title = "test", status = "warning", solidHeader 
+              = TRUE,
+              "Box content"
+          )
         ),
+        fluidRow(
+          div(
+          valueBoxOutput("rate")
+        )),
         fluidRow(
           box(
             plotOutput("plot1", height = 250),
@@ -143,14 +160,13 @@ ui <- dashboardPage(
           infoBoxOutput("progressBox"),
           infoBoxOutput("approvalBox")
         ),
-        
+
         # infoBoxes with fill=TRUE
         fluidRow(
           infoBox("New Orders", 10 * 2, icon = icon("credit-card"), fill = TRUE),
           infoBoxOutput("progressBox2"),
           infoBoxOutput("approvalBox2")
         ),
-        
         fluidRow(
           # Clicking this will increment the progress amount
           box(width = 4, actionButton("count", "Increment progress"))
